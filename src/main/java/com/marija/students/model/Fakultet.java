@@ -25,6 +25,9 @@ public class Fakultet {
     @Column(name = "naziv")
     private String naziv;
 
+    @ManyToOne
+    private Mesto mesto;
+
 
     @ManyToMany(mappedBy = "fakulteti", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JsonIgnore
@@ -37,8 +40,7 @@ public class Fakultet {
 //    @JsonIgnore
 //    private Mesto mesto;
 
-    @ManyToOne
-    private Mesto mesto;
+
 
     public Fakultet() {
     }
@@ -52,6 +54,7 @@ public class Fakultet {
         fakultet.setMesto(mesto);
         return fakultet;
     }
+
 
     public String getMaticniBroj() {
         return maticniBroj;

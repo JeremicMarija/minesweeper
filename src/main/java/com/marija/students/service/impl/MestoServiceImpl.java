@@ -1,14 +1,18 @@
 package com.marija.students.service.impl;
 
+import com.marija.students.exception.FakultetIsAlreadyAssignedException;
 import com.marija.students.exception.ResourceNotFoundException;
 import com.marija.students.model.Fakultet;
 import com.marija.students.model.Mesto;
 import com.marija.students.repository.MestoRepository;
 import com.marija.students.service.FakultetService;
 import com.marija.students.service.MestoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class MestoServiceImpl implements MestoService {
@@ -16,6 +20,7 @@ public class MestoServiceImpl implements MestoService {
     private final MestoRepository mestoRepository;
     private final FakultetService fakultetService;
 
+    @Autowired
     public MestoServiceImpl(MestoRepository mestoRepository, FakultetService fakultetService) {
         this.mestoRepository = mestoRepository;
         this.fakultetService = fakultetService;
@@ -44,6 +49,7 @@ public class MestoServiceImpl implements MestoService {
         return mesto;
     }
 
+    @Transactional
     @Override
     public Mesto editMesto(Long ptt, Mesto mesto) {
         Mesto mestoToEdit = getMesto(ptt);
@@ -60,7 +66,11 @@ public class MestoServiceImpl implements MestoService {
     public Mesto addFakultetToMesto(Long mestoId, String fakultetId) {
         Mesto mesto = getMesto(mestoId);
         Fakultet fakultet = fakultetService.getFakultet(fakultetId);
+        if (Objects.nonNull(fakultet.getMesto())){
+            throw new FakultetIsAlreadyAssignedException(fakultetId, fakultet.getMesto().getPtt());
+        }
         mesto.addFakultet(fakultet);
+        fakultet.setMesto(mesto);
         return mesto;
     }
 

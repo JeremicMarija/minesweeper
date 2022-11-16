@@ -9,6 +9,7 @@ import com.marija.students.service.FakultetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -46,9 +47,11 @@ public class FakultetServiceImpl implements FakultetService {
         return fakultet;
     }
 
+
     @Override
     public Fakultet editFakultet(String maticniBroj, Fakultet fakultet) {
         Fakultet fakultetToEdit = getFakultet(maticniBroj);
+
         fakultetToEdit.setMaticniBroj(fakultet.getMaticniBroj());
         fakultetToEdit.setNaziv(fakultet.getNaziv());
         fakultetToEdit.setMesto(fakultet.getMesto());

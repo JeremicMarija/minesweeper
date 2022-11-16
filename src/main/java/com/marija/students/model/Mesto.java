@@ -1,6 +1,7 @@
 package com.marija.students.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.marija.students.dto.MestoDto;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -59,6 +60,7 @@ public class Mesto implements Serializable {
         this.fakulteti = fakulteti;
     }
 
+
     public Long getPtt() {
         return ptt;
     }
@@ -91,6 +93,13 @@ public class Mesto implements Serializable {
         this.fakulteti = fakulteti;
     }
 
+    public static Mesto from(MestoDto mestoDto){
+        Mesto mesto = new Mesto();
+        mesto.setPtt(mestoDto.getPtt());
+        mesto.setNaziv(mestoDto.getNaziv());
+        mesto.setBrojStanovnika(mestoDto.getBrojStanovnika());
+        return mesto;
+    }
 
 //    OLD CODE
     //    public Mesto(Long ptt, String naziv, Long brojStanovnika) {

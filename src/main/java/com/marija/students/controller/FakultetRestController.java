@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/fakultet")
+@RequestMapping("/fakulteti")
 public class FakultetRestController {
 
     private FakultetService fakultetService;
@@ -36,10 +36,21 @@ public class FakultetRestController {
         List<FakultetDto> fakultetDtos = fakulteti.stream().map(FakultetDto::from).collect(Collectors.toList());
         return new ResponseEntity<>(fakultetDtos, HttpStatus.OK);
     }
-    @GetMapping(value = "{id}")
+    @GetMapping(value = "{maticniBroj}")
     public ResponseEntity<FakultetDto> getFakultet(@PathVariable final String maticniBroj){
         Fakultet fakultet = fakultetService.getFakultet(maticniBroj);
         return new ResponseEntity<>(FakultetDto.from(fakultet), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "{maticniBroj}")
+    public ResponseEntity<FakultetDto>deleteFakultet(@PathVariable final  String maticniBroj){
+        Fakultet fakultet = fakultetService.deleteFakultet(maticniBroj);
+        return new ResponseEntity<>(FakultetDto.from(fakultet), HttpStatus.OK);
+    }
+    @PutMapping(value = "{maticniBroj}")
+    public ResponseEntity<FakultetDto> editFakultet(@PathVariable final String maticniBroj, @RequestBody final FakultetDto fakultetDto){
+        Fakultet editFakultet = fakultetService.editFakultet(maticniBroj,Fakultet.from(fakultetDto));
+        return new ResponseEntity<>(FakultetDto.from(editFakultet), HttpStatus.OK);
     }
 
 
