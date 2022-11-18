@@ -1,35 +1,27 @@
 package com.marija.students.dto;
 
-import com.marija.students.model.Fakultet;
-import com.marija.students.model.Mesto;
-import com.marija.students.repository.MestoRepository;
-import com.marija.students.service.MestoService;
 
-import javax.validation.constraints.Min;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class FakultetDto {
 
-    private MestoService mestoService;
-
+    @Id
+    @NotNull
     @Size(max = 8,min = 8,message = "broj karaktera mora biti 8")
+    @Column(name = "maticni_broj")
     private String maticniBroj;
 
+    @NotNull
     @Size(max = 35,min = 2,message = "broj karaktera mora biti min 2 a max 35")
+    @Column(name = "naziv")
     private String naziv;
-    private Long mestoPtt;
 
-    public FakultetDto() {
-    }
-
-
-    public static FakultetDto from(Fakultet fakultet){
-        FakultetDto fakultetDto = new FakultetDto();
-        fakultetDto.setMaticniBroj(fakultet.getMaticniBroj());
-        fakultetDto.setNaziv(fakultet.getNaziv());
-        fakultetDto.setMestoPtt(fakultet.getMesto().getPtt());
-        return fakultetDto;
-    }
+    @NotNull
+    @Column(name = "mesto_id")
+    private Long mestoId;
 
     public String getMaticniBroj() {
         return maticniBroj;
@@ -47,11 +39,11 @@ public class FakultetDto {
         this.naziv = naziv;
     }
 
-    public Long getMestoPtt() {
-        return mestoPtt;
+    public Long getMestoId() {
+        return mestoId;
     }
 
-    public void setMestoPtt(Long mestoPtt) {
-        this.mestoPtt = mestoPtt;
+    public void setMestoId(Long mestoId) {
+        this.mestoId = mestoId;
     }
 }

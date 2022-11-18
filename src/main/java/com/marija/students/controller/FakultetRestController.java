@@ -2,95 +2,83 @@ package com.marija.students.controller;
 
 import com.marija.students.dto.FakultetDto;
 import com.marija.students.model.Fakultet;
-import org.modelmapper.ModelMapper;
 import com.marija.students.service.FakultetService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
+
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/fakulteti")
+@RequestMapping("/api/fakultet")
 public class FakultetRestController {
 
-    private FakultetService fakultetService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
-    public FakultetRestController(FakultetService fakultetService) {
+    private final FakultetService fakultetService;
+
+    public FakultetRestController(ModelMapper modelMapper, FakultetService fakultetService) {
+        this.modelMapper = modelMapper;
         this.fakultetService = fakultetService;
     }
 
-    @PostMapping
-    public ResponseEntity<FakultetDto>addFakultet(@RequestBody final FakultetDto fakultetDto){
-        Fakultet fakultet = fakultetService.addFakultet(Fakultet.from(fakultetDto));
-        return new ResponseEntity<>(FakultetDto.from(fakultet), HttpStatus.OK);
+    @GetMapping("/all")
+    public ResponseEntity<List<Fakultet>> findAll(){
+
+        return ResponseEntity.status(HttpStatus.OK).body(fakultetService.findAll());
+
     }
 
-    @GetMapping
-    public ResponseEntity<List<FakultetDto>> getFaklteti(){
-        List<Fakultet> fakulteti = fakultetService.getFakulteti();
-        List<FakultetDto> fakultetDtos = fakulteti.stream().map(FakultetDto::from).collect(Collectors.toList());
-        return new ResponseEntity<>(fakultetDtos, HttpStatus.OK);
-    }
-    @GetMapping(value = "{maticniBroj}")
-    public ResponseEntity<FakultetDto> getFakultet(@PathVariable final String maticniBroj){
-        Fakultet fakultet = fakultetService.getFakultet(maticniBroj);
-        return new ResponseEntity<>(FakultetDto.from(fakultet), HttpStatus.OK);
-    }
+    @GetMapping("/get/{maticniBroj}")
+    public ResponseEntity<FakultetDto> get(@PathVariable String maticniBroj){
 
-    @DeleteMapping(value = "{maticniBroj}")
-    public ResponseEntity<FakultetDto>deleteFakultet(@PathVariable final  String maticniBroj){
-        Fakultet fakultet = fakultetService.deleteFakultet(maticniBroj);
-        return new ResponseEntity<>(FakultetDto.from(fakultet), HttpStatus.OK);
-    }
-    @PutMapping(value = "{maticniBroj}")
-    public ResponseEntity<FakultetDto> editFakultet(@PathVariable final String maticniBroj, @RequestBody final FakultetDto fakultetDto){
-        Fakultet editFakultet = fakultetService.editFakultet(maticniBroj,Fakultet.from(fakultetDto));
-        return new ResponseEntity<>(FakultetDto.from(editFakultet), HttpStatus.OK);
-    }
-
-
-
-    //OLD CODE
-    //    @Autowired
-//    private ModelMapper modelMapper;
+//        Optional<Fakultet> fakultet = fakultetService.findByID(maticniBroj);
 //
-//    @Autowired
-//    private FakultetService fakultetService;
-//
-//    public FakultetRestController(FakultetService fakultetService) {
-//        this.fakultetService = fakultetService;
-//    }
-//
-//    @GetMapping()
-//    public ResponseEntity<List<Fakultet>> findAll(){
-//        return ResponseEntity.status(HttpStatus.OK).body(fakultetService.findAll());
-//    }
-//    @GetMapping("/{maticni_broj}")
-//    public ResponseEntity<Fakultet>findByID(@PathVariable("maticni_broj") String maticni_broj){
-//        return new ResponseEntity<Fakultet>(fakultetService.findByID(maticni_broj), HttpStatus.OK);
-//    }
-//
-//    @PostMapping()
-//    public ResponseEntity<FakultetDto> createFakultet(@RequestBody FakultetDto fakultetDto){
-//        Fakultet fakultet = fakultetService.createFakultet(fakultetDto);
 //        FakultetDto fakultetResponse = modelMapper.map(fakultet, FakultetDto.class);
-//
-//        return new ResponseEntity<FakultetDto>(fakultetResponse, HttpStatus.CREATED);
+//        System.out.println(fakultetResponse);
+//        return ResponseEntity.ok().body(fakultetResponse);
+        Fakultet fakultet = fakultetService.getFakultetById(maticniBroj);
+
+        FakultetDto fakultetResponse = modelMapper.map(fakultet, FakultetDto.class);
+        System.out.println(fakultetResponse.getNaziv());
+        System.out.println(fakultetResponse.getMaticniBroj());
+        System.out.println(fakultetResponse.getMestoId());
+        return ResponseEntity.ok().body(fakultetResponse);
+
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<FakultetDto>createFakultet(@RequestBody FakultetDto fakultetDto){
+
+        Fakultet fakultet = fakultetService.createFakultet(fakultetDto);
+        FakultetDto fakultetResponse = modelMapper.map(fakultet, FakultetDto.class);
+
+        System.out.println(fakultetResponse.getMestoId());
+
+        return new ResponseEntity<FakultetDto>(fakultetResponse, HttpStatus.CREATED);
+    }
+
+//    @PutMapping("/update/{maticniBroj}")
+//    public ResponseEntity<Fakultet>updateFakultet(@PathVariable String maticniBroj, @RequestBody FakultetDto fakultetDto){
+//        return new ResponseEntity<Fakultet>(fakultetService.updateFakultet(fakultetDto), HttpStatus.OK);
 //    }
-//
-//    @PutMapping("/{maticniBroj}")
-//    public ResponseEntity<Fakultet> updateFakultet(@RequestBody FakultetDto fakultetDto, @PathVariable("maticniBroj") String maticniBroj){
-//        return new ResponseEntity<Fakultet>(fakultetService.updateFakultet(fakultetDto, maticniBroj),HttpStatus.OK);
-//    }
-//
-//    @DeleteMapping("/{maticniBroj}")
-//    public ResponseEntity<HttpStatus> deleteFakultet(@PathVariable("maticniBroj") String maticniBroj){
-//        fakultetService.deleteFakultetByMaticniBroj(maticniBroj);
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
+    @PutMapping("/update")
+    public ResponseEntity<Fakultet>updateFakultet(@RequestBody FakultetDto fakultetDto){
+        return new ResponseEntity<Fakultet>(fakultetService.updateFakultet(fakultetDto), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{maticniBroj}")
+    public @ResponseBody ResponseEntity<String>delete(@PathVariable String maticniBroj){
+        fakultetService.delete(maticniBroj);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

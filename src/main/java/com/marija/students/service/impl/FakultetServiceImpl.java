@@ -1,125 +1,81 @@
 package com.marija.students.service.impl;
 
+
+import com.marija.students.dto.FakultetDto;
 import com.marija.students.exception.ResourceNotFoundException;
 import com.marija.students.model.Fakultet;
 import com.marija.students.model.Mesto;
 import com.marija.students.repository.FakultetRepository;
 import com.marija.students.repository.MestoRepository;
 import com.marija.students.service.FakultetService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
+
 
 @Service
 public class FakultetServiceImpl implements FakultetService {
 
-    private final FakultetRepository fakultetRepository;
-    private final MestoRepository mestoRepository;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    public FakultetServiceImpl(FakultetRepository fakultetRepository, MestoRepository mestoRepository) {
-        this.fakultetRepository = fakultetRepository;
+    private final MestoRepository mestoRepository;
+    private final FakultetRepository fakultetRepository;
+
+    public FakultetServiceImpl(ModelMapper modelMapper, MestoRepository mestoRepository, FakultetRepository fakultetRepository) {
+        this.modelMapper = modelMapper;
         this.mestoRepository = mestoRepository;
+        this.fakultetRepository = fakultetRepository;
     }
 
     @Override
-    public Fakultet addFakultet(Fakultet fakultet) {
+    public Fakultet createFakultet(FakultetDto fakultetDto) {
+        Optional<Fakultet> fakultetOptional = fakultetRepository.findById(fakultetDto.getMaticniBroj());
+        if (fakultetOptional.isPresent()){
+            throw new IllegalStateException("Fakultet postoji");
+        }
+        Fakultet fakultet = modelMapper.map(fakultetDto, Fakultet.class);
+        Mesto mesto = mestoRepository.getReferenceById(fakultetDto.getMestoId());
+
+        fakultet.setMesto(mesto);
         return fakultetRepository.save(fakultet);
     }
 
     @Override
-    public List<Fakultet> getFakulteti() {
+    public List<Fakultet> findAll() {
         return fakultetRepository.findAll();
     }
 
     @Override
-    public Fakultet getFakultet(String maticniBroj) {
-        return fakultetRepository.findById(maticniBroj).orElseThrow(
-                () -> new ResourceNotFoundException("Fakultet ne postoji sa ", "ID= ", maticniBroj));
+    public Fakultet getFakultetById(String maticniBroj) {
+       Optional<Fakultet> fakultet = fakultetRepository.findById(maticniBroj);
+       if (fakultet.isPresent()){
+           return fakultet.get();
+       }else {
+           throw new ResourceNotFoundException("Fakultet ne postoji sa ", "ID= ", maticniBroj);
+       }
     }
 
     @Override
-    public Fakultet deleteFakultet(String maticniBroj) {
-        Fakultet fakultet = getFakultet(maticniBroj);
-        fakultetRepository.delete(fakultet);
-        return fakultet;
-    }
+    public Fakultet updateFakultet( FakultetDto fakultetDto) {
 
+        Fakultet existingFakultet = fakultetRepository.findById(fakultetDto.getMaticniBroj()).orElseThrow(
+                () -> new ResourceNotFoundException("Fakultet ", "Maticni broj= ",fakultetDto.getMaticniBroj()));
+
+//        existingFakultet.setMaticniBroj(fakultetDto.getMaticniBroj());
+        existingFakultet.setNaziv(fakultetDto.getNaziv());
+//        Mesto mesto = mestoRepository.getReferenceById(fakultetDto.getMestoId());
+        Mesto mesto = mestoRepository.getById(fakultetDto.getMestoId());
+        existingFakultet.setMesto(mesto);
+
+        fakultetRepository.save(existingFakultet);
+
+        return existingFakultet;
+    }
 
     @Override
-    public Fakultet editFakultet(String maticniBroj, Fakultet fakultet) {
-        Fakultet fakultetToEdit = getFakultet(maticniBroj);
-
-        fakultetToEdit.setMaticniBroj(fakultet.getMaticniBroj());
-        fakultetToEdit.setNaziv(fakultet.getNaziv());
-        fakultetToEdit.setMesto(fakultet.getMesto());
-        return fakultetToEdit;
+    public void delete(String maticniBroj) {
+        fakultetRepository.deleteById(maticniBroj);
     }
-
-
-    //    OLD CODE
-
-//    private final ModelMapper modelMapper;
-//
-//    private final FakultetRepository fakultetRepository;
-//
-//    private final MestoRepository mestoRepository;
-//
-//    private EntityManager entityManager;
-//
-//    public FakultetServiceImpl(ModelMapper modelMapper, FakultetRepository fakultetRepository, MestoRepository mestoRepository, EntityManager entityManager) {
-//        this.modelMapper = modelMapper;
-//        this.fakultetRepository = fakultetRepository;
-//        this.mestoRepository = mestoRepository;
-//        this.entityManager = entityManager;
-//    }
-//
-//    @Override
-//    public List<Fakultet> findAll() {
-//        return fakultetRepository.findAll();
-//    }
-//
-//    @Override
-//    public Fakultet findByID(String maticniBroj) {
-//        Optional<Fakultet> fakultet = fakultetRepository.findByMaticniBroj(maticniBroj);
-//        if (fakultet.isPresent()){
-//            return fakultet.get();
-//        }else {
-//            throw new ResourceNotFoundException("Fakultet ne postoji sa ", "ID= ",maticniBroj);
-//        }
-//    }
-//
-//    @Override
-//    public Fakultet createFakultet(FakultetDto fakultetDto) {
-//        Optional<Fakultet> fakultetOptional = fakultetRepository.findByMaticniBroj(fakultetDto.getMaticniBroj());
-//        if (fakultetOptional.isPresent()){
-//            throw new IllegalStateException("Fakultet postoji!");
-//        }
-//        Fakultet fakultet = modelMapper.map(fakultetDto, Fakultet.class);
-//        Mesto mesto = mestoRepository.getById(fakultetDto.getMestoPtt());
-//        fakultet.setMesto(mesto);
-//        return fakultetRepository.save(fakultet);
-//    }
-//
-//    @Override
-//    public Fakultet updateFakultet(FakultetDto fakultetDto, String maticniBroj) {
-//        Fakultet existingFakultet = fakultetRepository.findByMaticniBroj(maticniBroj).orElseThrow(
-//                ()-> new ResourceNotFoundException("Fakultet ne postoji sa ", "ID= ", maticniBroj));
-//
-//        existingFakultet.setNaziv(fakultetDto.getNaziv());
-//        Mesto mesto = mestoRepository.getById(fakultetDto.getMestoPtt());
-//        existingFakultet.setMesto(mesto);
-//
-//        fakultetRepository.save(existingFakultet);
-//
-//        return existingFakultet;
-//    }
-//
-//    @Override
-//    public void deleteFakultetByMaticniBroj(String maticniBroj) {
-//        fakultetRepository.deleteFakultetByMaticniBroj(maticniBroj);
-//    }
-
 }

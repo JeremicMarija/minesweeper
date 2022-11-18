@@ -1,18 +1,12 @@
 package com.marija.students.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.marija.students.dto.FakultetDto;
-import com.marija.students.service.MestoService;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.util.List;
 
 @Entity
-@Table(name = "fakultet")
+@Table(name = "fakulteti")
 public class Fakultet {
-
-    private MestoService mestoService;
 
     @Id
     @NotNull
@@ -25,36 +19,18 @@ public class Fakultet {
     @Column(name = "naziv")
     private String naziv;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "mesto_id", referencedColumnName = "ptt") // FK
     private Mesto mesto;
 
+    public Fakultet(){
 
-    @ManyToMany(mappedBy = "fakulteti", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    @JsonIgnore
-    private List<Student>studenti;
-
-
-//    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-//    @JoinColumn(name = "mesto_ptt", referencedColumnName = "ptt")
-//    @NotNull
-//    @JsonIgnore
-//    private Mesto mesto;
-
-
-
-    public Fakultet() {
     }
 
-    public static Fakultet from(FakultetDto fakultetDto){
-        Fakultet fakultet = new Fakultet();
-        fakultet.setMaticniBroj(fakultetDto.getMaticniBroj());
-        fakultet.setNaziv(fakultetDto.getNaziv());
-        MestoService mestoService = null;
-        Mesto mesto = mestoService.getMesto(fakultetDto.getMestoPtt());
-        fakultet.setMesto(mesto);
-        return fakultet;
+    public Fakultet(String maticniBroj, String naziv) {
+        this.maticniBroj = maticniBroj;
+        this.naziv = naziv;
     }
-
 
     public String getMaticniBroj() {
         return maticniBroj;
@@ -72,14 +48,6 @@ public class Fakultet {
         this.naziv = naziv;
     }
 
-    public List<Student> getStudenti() {
-        return studenti;
-    }
-
-    public void setStudenti(List<Student> studenti) {
-        this.studenti = studenti;
-    }
-
     public Mesto getMesto() {
         return mesto;
     }
@@ -88,50 +56,9 @@ public class Fakultet {
         this.mesto = mesto;
     }
 
-//    OLD CODE
-    //    public Fakultet() {
-//    }
-//
-//    public String getMaticniBroj() {
-//        return maticniBroj;
-//    }
-//
-//    public void setMaticniBroj(String maticniBroj) {
-//        this.maticniBroj = maticniBroj;
-//    }
-//
-//    public String getNaziv() {
-//        return naziv;
-//    }
-//
-//    public void setNaziv(String naziv) {
-//        this.naziv = naziv.substring(0,1).toUpperCase() + naziv.substring(1);
-//    }
-//
-//    public Mesto getMesto() {
-//        return mesto;
-//    }
-//
-//    public void setMesto(Mesto mesto) {
-//        this.mesto = mesto;
-//    }
-//
-//    public List<Student> getStudenti() {
-//        return studenti;
-//    }
-//
-//    public void setStudenti(List<Student> studenti) {
-//        this.studenti = studenti;
-//    }
-//
-//    public void registrujFakultetZaStudenta(Student student){
-//        studenti.add(student);
-//        student.getFakulteti().add(this);
-//    }
-
     @Override
     public String toString(){
-        return "Fakultet{ " + "maticni broj= " + maticniBroj + ", naziv= " + naziv + '\'' + '}';
+        return "Fakultet[maticni broj= " + maticniBroj + ", naziv= " + naziv + "]";
     }
 
     //FON Maticni broj = 07004044
