@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,25 +39,20 @@ public class FakultetRestController {
     }
 
     @GetMapping("/get/{maticniBroj}")
-    public ResponseEntity<FakultetDto> get(@PathVariable String maticniBroj){
+    public ResponseEntity<Fakultet> get(@PathVariable String maticniBroj){
 
-//        Optional<Fakultet> fakultet = fakultetService.findByID(maticniBroj);
-//
-//        FakultetDto fakultetResponse = modelMapper.map(fakultet, FakultetDto.class);
-//        System.out.println(fakultetResponse);
-//        return ResponseEntity.ok().body(fakultetResponse);
         Fakultet fakultet = fakultetService.getFakultetById(maticniBroj);
-
-        FakultetDto fakultetResponse = modelMapper.map(fakultet, FakultetDto.class);
-        System.out.println(fakultetResponse.getNaziv());
-        System.out.println(fakultetResponse.getMaticniBroj());
-        System.out.println(fakultetResponse.getMestoId());
-        return ResponseEntity.ok().body(fakultetResponse);
+//        FakultetDto fakultetResponse = modelMapper.map(fakultet, FakultetDto.class);
+//        System.out.println(fakultetResponse.getNaziv());
+//        System.out.println(fakultetResponse.getMaticniBroj());
+//        System.out.println(fakultetResponse.getMestoId());
+        System.out.println(fakultet);
+        return ResponseEntity.ok().body(fakultet);
 
     }
 
     @PostMapping("/save")
-    public ResponseEntity<FakultetDto>createFakultet(@RequestBody FakultetDto fakultetDto){
+    public ResponseEntity<FakultetDto>createFakultet(@Valid @RequestBody FakultetDto fakultetDto){
 
         Fakultet fakultet = fakultetService.createFakultet(fakultetDto);
         FakultetDto fakultetResponse = modelMapper.map(fakultet, FakultetDto.class);
@@ -71,7 +67,7 @@ public class FakultetRestController {
 //        return new ResponseEntity<Fakultet>(fakultetService.updateFakultet(fakultetDto), HttpStatus.OK);
 //    }
     @PutMapping("/update")
-    public ResponseEntity<Fakultet>updateFakultet(@RequestBody FakultetDto fakultetDto){
+    public ResponseEntity<Fakultet>updateFakultet(@Valid @RequestBody FakultetDto fakultetDto){
         return new ResponseEntity<Fakultet>(fakultetService.updateFakultet(fakultetDto), HttpStatus.OK);
     }
 

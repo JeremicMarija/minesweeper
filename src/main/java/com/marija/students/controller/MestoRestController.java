@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,13 +47,13 @@ public class MestoRestController {
     }
 
     @PostMapping("/save")
-    public @ResponseBody ResponseEntity<Mesto> save(@RequestBody Mesto mesto){
+    public @ResponseBody ResponseEntity<Mesto> save(@Valid @RequestBody Mesto mesto){
 //        return ResponseEntity.ok(mestoService.save(mesto));
         return new ResponseEntity<Mesto>(mestoService.createMesto(mesto), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{ptt}")
-    public ResponseEntity<Mesto> updateMesto(@PathVariable Long ptt, @RequestBody Mesto mesto){
+    public ResponseEntity<Mesto> updateMesto(@Valid @PathVariable Long ptt, @RequestBody Mesto mesto){
         return new ResponseEntity<Mesto>(mestoService.updateMesto(mesto, ptt), HttpStatus.OK);
     }
 

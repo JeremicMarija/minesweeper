@@ -10,12 +10,12 @@ public class Fakultet {
 
     @Id
     @NotNull
-    @Size(max = 8,min = 8,message = "broj karaktera mora biti 8")
+    @Pattern(regexp="^[0-9a-zA-Z]{8}",message ="Maticni broj mora imati 8 cifara")
     @Column(name = "maticni_broj")
     private String maticniBroj;
 
     @NotNull
-    @Size(max = 35,min = 2,message = "broj karaktera mora biti min 2 a max 35")
+    @Pattern(regexp = "^[A-Z]+[a-zA-Z\s]{2,35}$", message = "Naziv mora pocinjati velikim slovom i broj karaktera mora biti min 2 a max 35")
     @Column(name = "naziv")
     private String naziv;
 
@@ -27,9 +27,10 @@ public class Fakultet {
 
     }
 
-    public Fakultet(String maticniBroj, String naziv) {
+    public Fakultet(String maticniBroj, String naziv, Mesto mesto) {
         this.maticniBroj = maticniBroj;
         this.naziv = naziv;
+        this.mesto = mesto;
     }
 
     public String getMaticniBroj() {
@@ -58,7 +59,7 @@ public class Fakultet {
 
     @Override
     public String toString(){
-        return "Fakultet[maticni broj= " + maticniBroj + ", naziv= " + naziv + "]";
+        return "Fakultet[maticni broj= " + maticniBroj + ", naziv= " + naziv + ", mesto ptt = "+ mesto.getPtt() +"]";
     }
 
     //FON Maticni broj = 07004044

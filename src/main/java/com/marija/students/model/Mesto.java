@@ -2,9 +2,12 @@ package com.marija.students.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,17 +15,20 @@ import java.util.List;
 @Table(name = "mesto")
 public class Mesto {
 
+
+//    @Range(min=5, max=6, message ="Ptt mora imati 5 cifara")
     @Id
-    @Basic(optional = false)
-    @Min(value=5, message="Ptt mora imati 5 cifara")
+    @NotNull
+    @Digits(integer = 5, fraction = 0, message = "Ptt mora imati 5 cifara")
     @Column(name = "ptt")
     private Long ptt;
 
     @NotNull
-    @Size(max = 35,min = 2,message = "Broj karaktera mora biti min 2 a max 35")
+    @Pattern(regexp = "^[A-Z]+[a-zA-Z\s]{2,35}$", message = "Naziv mora pocinjati velikim slovom i broj karaktera mora biti min 2 a max 35")
     @Column(name = "naziv")
     private String naziv;
 
+    @NotNull
     @Min(value = 1, message = "Broj stanovnika mora biti veci od nule")
     @Column(name = "broj_stanovnika")
     private Long brojStanovnika;
