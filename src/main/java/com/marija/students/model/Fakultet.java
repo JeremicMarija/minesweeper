@@ -1,8 +1,11 @@
 package com.marija.students.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.List;
 
 @Entity
 @Table(name = "fakulteti")
@@ -22,6 +25,12 @@ public class Fakultet {
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "mesto_id", referencedColumnName = "ptt") // FK
     private Mesto mesto;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "assignedFakulteti")
+    private List<Student> studenti;
+
+
 
     public Fakultet(){
 
@@ -55,6 +64,14 @@ public class Fakultet {
 
     public void setMesto(Mesto mesto) {
         this.mesto = mesto;
+    }
+
+    public List<Student> getStudenti() {
+        return studenti;
+    }
+
+    public void setStudenti(List<Student> studenti) {
+        this.studenti = studenti;
     }
 
     @Override
