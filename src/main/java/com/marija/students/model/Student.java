@@ -14,7 +14,7 @@ public class Student {
 
     @Id
     @NotNull
-    @Pattern(regexp = "^[0-9]{2}+[\\\\]{1}+[0-9]{1,4}$", message = "Broj indeksa mora biti u formatu 21/3720, dve cifre za godinu i maksimalno 4 cifre za redni broj")
+    @Pattern(regexp = "^[0-9]{2}+[/]{1}+[0-9]{1,4}$", message = "Broj indeksa mora biti u formatu 21/3720, dve cifre za godinu i maksimalno 4 cifre za redni broj")
     @Column(name = "broj_indeksa")
     private String brojIndeksa;
 
@@ -51,14 +51,6 @@ public class Student {
     public List<Fakultet> assignedFakulteti;
 
 
-    private int calcStarost(LocalDate datumRodjenja) {
-        LocalDate d = LocalDate.now();
-        return Period.between(datumRodjenja, d).getYears();
-//        if (datumRodjenja != null){
-//            return Period.between(datumRodjenja, d).getYears();
-//        }
-    }
-
     public Student() {
     }
 
@@ -68,7 +60,6 @@ public class Student {
         this.prezime = prezime;
         this.datumRodjenja = datumRodjenja;
         this.jmbg = jmbg;
-//        this.starost = LocalDate.now().getYear() - datumRodjenja.getYear();
     }
 
 
