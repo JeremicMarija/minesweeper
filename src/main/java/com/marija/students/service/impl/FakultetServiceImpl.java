@@ -11,11 +11,12 @@ import com.marija.students.service.FakultetService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
+@Transactional
 public class FakultetServiceImpl implements FakultetService {
 
     private final ModelMapper modelMapper;
@@ -37,7 +38,6 @@ public class FakultetServiceImpl implements FakultetService {
         }
         Fakultet fakultet = modelMapper.map(fakultetDto, Fakultet.class);
         Mesto mesto = mestoRepository.getReferenceById(fakultetDto.getMestoId());
-
         fakultet.setMesto(mesto);
         return fakultetRepository.save(fakultet);
     }
@@ -76,6 +76,15 @@ public class FakultetServiceImpl implements FakultetService {
 
     @Override
     public void delete(String maticniBroj) {
-        fakultetRepository.deleteById(maticniBroj);
+        Fakultet fakultet = fakultetRepository.findFakultetById(maticniBroj);
+        if (fakultet != null){
+            fakultet.getStudenti().forEach(student -> {
+                student.getFakulteti().remove(fakultet);
+            });
+            fakultetRepository.deleteById(maticniBroj);
+        }else {
+            throw new ResourceNotFoundException("Fakultet ne postoji sa ", "ID= ", maticniBroj);
+        }
+//        fakultetRepository.deleteById(maticniBroj);
     }
 }

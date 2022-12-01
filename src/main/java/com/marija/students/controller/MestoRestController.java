@@ -47,9 +47,9 @@ public class MestoRestController {
     }
 
     @PostMapping("/save")
-    public @ResponseBody ResponseEntity<Mesto> save(@Valid @RequestBody Mesto mesto){
-//        return ResponseEntity.ok(mestoService.save(mesto));
-        return new ResponseEntity<Mesto>(mestoService.createMesto(mesto), HttpStatus.CREATED);
+    public ResponseEntity<Mesto> save(@Valid @RequestBody Mesto mesto){
+        return ResponseEntity.ok(mestoService.createMesto(mesto));
+//        return new ResponseEntity<Mesto>(mestoService.createMesto(mesto), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{ptt}")

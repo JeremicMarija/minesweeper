@@ -16,18 +16,16 @@ public class FakultetDto {
     @Id
     @NotNull
     @Pattern(regexp="^[0-9a-zA-Z]{8}",message ="Maticni broj mora imati 8 cifara")
-    @Column(name = "maticni_broj")
     private String maticniBroj;
 
     @NotNull
     @Pattern(regexp = "^[A-Z]+[a-zA-Z\s]{2,35}$", message = "Naziv mora pocinjati velikim slovom i broj karaktera mora biti min 2 a max 35")
-    @Column(name = "naziv")
     private String naziv;
 
     @NotNull
     @Digits(integer = 5, fraction = 0, message = "Ptt mora imati 5 cifara")
-    @Column(name = "mesto_id")
     private Long mestoId;
+
 
     public String getMaticniBroj() {
         return maticniBroj;

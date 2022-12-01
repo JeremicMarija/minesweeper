@@ -42,11 +42,7 @@ public class FakultetRestController {
     public ResponseEntity<Fakultet> get(@PathVariable String maticniBroj){
 
         Fakultet fakultet = fakultetService.getFakultetById(maticniBroj);
-//        FakultetDto fakultetResponse = modelMapper.map(fakultet, FakultetDto.class);
-//        System.out.println(fakultetResponse.getNaziv());
-//        System.out.println(fakultetResponse.getMaticniBroj());
-//        System.out.println(fakultetResponse.getMestoId());
-        System.out.println(fakultet);
+//        System.out.println(fakultet);
         return ResponseEntity.ok().body(fakultet);
 
     }

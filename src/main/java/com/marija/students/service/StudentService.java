@@ -1,6 +1,9 @@
 package com.marija.students.service;
 
 
+import com.marija.students.dto.FakultetDto;
+import com.marija.students.dto.StudentDto;
+import com.marija.students.model.Fakultet;
 import com.marija.students.model.Student;
 
 import java.time.LocalDate;
@@ -9,15 +12,16 @@ import java.util.Optional;
 
 public interface StudentService {
 
-    public Student createStudent(Student student);
+    public Student createStudent(StudentDto student);
 
     public List<Student> findAll();
 
-    public void delete(String studentId);
-
     Optional<Student>findByID(String studentID);
 
-    Student assignFakultetToStudent(String studentId, String fakultetId);
+    Student updateStudent(StudentDto studentDto);
+//    Student updateStudent(Student student);
 
     int calcStarost(LocalDate datumRodjenja);
+
+    public void delete(String studentId);
 }

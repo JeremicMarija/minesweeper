@@ -27,9 +27,13 @@ public class Fakultet {
     private Mesto mesto;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "assignedFakulteti")
-    private List<Student> studenti;
-
+    @ManyToMany()
+    @JoinTable(
+            name = "studira",
+            joinColumns = @JoinColumn(name = "fakultetID", referencedColumnName = "maticni_broj"),
+            inverseJoinColumns = @JoinColumn(name = "studentID", referencedColumnName = "broj_indeksa")
+    )
+    private List<Student>studenti;
 
 
     public Fakultet(){
@@ -72,6 +76,10 @@ public class Fakultet {
 
     public void setStudenti(List<Student> studenti) {
         this.studenti = studenti;
+    }
+
+    public void addStudent(Student student){
+        studenti.add(student);
     }
 
     @Override
