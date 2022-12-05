@@ -15,6 +15,7 @@ public interface FakultetService {
 
 //    Optional<Fakultet>findByID(String maticniBroj);
     Fakultet getFakultetById(String maticniBroj);
+//    FakultetDto getFakultetById(String maticniBroj);
 
     Fakultet updateFakultet(FakultetDto fakultetDto);
 

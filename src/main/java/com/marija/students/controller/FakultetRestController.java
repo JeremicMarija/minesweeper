@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -39,11 +38,12 @@ public class FakultetRestController {
     }
 
     @GetMapping("/get/{maticniBroj}")
-    public ResponseEntity<Fakultet> get(@PathVariable String maticniBroj){
+    public ResponseEntity<FakultetDto> get(@PathVariable String maticniBroj){
 
         Fakultet fakultet = fakultetService.getFakultetById(maticniBroj);
-//        System.out.println(fakultet);
-        return ResponseEntity.ok().body(fakultet);
+        FakultetDto fakultetResponse = modelMapper.map(fakultet, FakultetDto.class);
+        fakultetResponse.setMestoId(fakultet.getMesto().getPtt());
+        return ResponseEntity.ok().body(fakultetResponse);
 
     }
 
@@ -52,25 +52,26 @@ public class FakultetRestController {
 
         Fakultet fakultet = fakultetService.createFakultet(fakultetDto);
         FakultetDto fakultetResponse = modelMapper.map(fakultet, FakultetDto.class);
-
+        fakultetResponse.setMestoId(fakultetDto.getMestoId());
         System.out.println(fakultetResponse.getMestoId());
 
         return new ResponseEntity<FakultetDto>(fakultetResponse, HttpStatus.CREATED);
     }
 
-//    @PutMapping("/update/{maticniBroj}")
-//    public ResponseEntity<Fakultet>updateFakultet(@PathVariable String maticniBroj, @RequestBody FakultetDto fakultetDto){
-//        return new ResponseEntity<Fakultet>(fakultetService.updateFakultet(fakultetDto), HttpStatus.OK);
-//    }
     @PutMapping("/update")
-    public ResponseEntity<Fakultet>updateFakultet(@Valid @RequestBody FakultetDto fakultetDto){
-        return new ResponseEntity<Fakultet>(fakultetService.updateFakultet(fakultetDto), HttpStatus.OK);
+    public ResponseEntity<FakultetDto>updateFakultet(@Valid @RequestBody FakultetDto fakultetDto){
+
+        Fakultet fakultet = fakultetService.updateFakultet(fakultetDto);
+        FakultetDto fakultetResponse = modelMapper.map(fakultet, FakultetDto.class);
+        fakultetResponse.setMestoId(fakultetDto.getMestoId());
+        return new ResponseEntity<FakultetDto>(fakultetResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{maticniBroj}")
     public @ResponseBody ResponseEntity<String>delete(@PathVariable String maticniBroj){
         fakultetService.delete(maticniBroj);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.OK).body("Deleted");
     }
 
 }

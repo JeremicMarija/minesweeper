@@ -37,7 +37,7 @@ public class FakultetServiceImpl implements FakultetService {
             throw new IllegalStateException("Fakultet postoji");
         }
         Fakultet fakultet = modelMapper.map(fakultetDto, Fakultet.class);
-        Mesto mesto = mestoRepository.getReferenceById(fakultetDto.getMestoId());
+        Mesto mesto = mestoRepository.getById(fakultetDto.getMestoId());
         fakultet.setMesto(mesto);
         return fakultetRepository.save(fakultet);
     }
@@ -63,9 +63,7 @@ public class FakultetServiceImpl implements FakultetService {
         Fakultet existingFakultet = fakultetRepository.findById(fakultetDto.getMaticniBroj()).orElseThrow(
                 () -> new ResourceNotFoundException("Fakultet ", "Maticni broj= ",fakultetDto.getMaticniBroj()));
 
-//        existingFakultet.setMaticniBroj(fakultetDto.getMaticniBroj());
         existingFakultet.setNaziv(fakultetDto.getNaziv());
-//        Mesto mesto = mestoRepository.getReferenceById(fakultetDto.getMestoId());
         Mesto mesto = mestoRepository.getById(fakultetDto.getMestoId());
         existingFakultet.setMesto(mesto);
 
