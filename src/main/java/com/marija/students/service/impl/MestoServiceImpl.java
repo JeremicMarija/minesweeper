@@ -1,7 +1,7 @@
 package com.marija.students.service.impl;
 
 
-import com.marija.students.exception.ResourceNotFoundException;
+import com.marija.students.exception.ResursNijePronadjenException;
 import com.marija.students.model.Mesto;
 import com.marija.students.repository.MestoRepository;
 import com.marija.students.service.MestoService;
@@ -52,7 +52,7 @@ public class MestoServiceImpl implements MestoService {
     public Mesto updateMesto(Mesto mesto, Long ptt) {
 
         Mesto existingMesto = mestoRepository.findById(ptt).orElseThrow(
-                () -> new ResourceNotFoundException("Mesto ", "Ptt= ", ptt));
+                () -> new ResursNijePronadjenException("Mesto ", "Ptt= ", ptt));
 
         existingMesto.setPtt(mesto.getPtt());
         existingMesto.setNaziv(mesto.getNaziv());

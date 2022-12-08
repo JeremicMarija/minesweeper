@@ -6,6 +6,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentDto {
 
@@ -30,7 +32,8 @@ public class StudentDto {
 
     private int starost;
 
-    private String fakultetId;
+//    private String fakultetId;
+    private List<String> fakultetIds = new ArrayList<>();
 
     public String getBrojIndeksa() {
         return brojIndeksa;
@@ -80,11 +83,11 @@ public class StudentDto {
         this.starost = starost;
     }
 
-    public String getFakultetId() {
-        return fakultetId;
+    public List<String> getFakultetIds() {
+        return fakultetIds;
     }
 
-    public void setFakultetId(String fakultetId) {
-        this.fakultetId = fakultetId;
+    public void setFakultetIds(List<String> fakultetIds) {
+        this.fakultetIds = fakultetIds;
     }
 }

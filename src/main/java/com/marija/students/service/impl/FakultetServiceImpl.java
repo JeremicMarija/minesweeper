@@ -2,7 +2,7 @@ package com.marija.students.service.impl;
 
 
 import com.marija.students.dto.FakultetDto;
-import com.marija.students.exception.ResourceNotFoundException;
+import com.marija.students.exception.ResursNijePronadjenException;
 import com.marija.students.model.Fakultet;
 import com.marija.students.model.Mesto;
 import com.marija.students.repository.FakultetRepository;
@@ -53,7 +53,7 @@ public class FakultetServiceImpl implements FakultetService {
        if (fakultet.isPresent()){
            return fakultet.get();
        }else {
-           throw new ResourceNotFoundException("Fakultet ne postoji sa ", "ID= ", maticniBroj);
+           throw new ResursNijePronadjenException("Fakultet ne postoji sa ", "ID= ", maticniBroj);
        }
     }
 
@@ -61,7 +61,7 @@ public class FakultetServiceImpl implements FakultetService {
     public Fakultet updateFakultet( FakultetDto fakultetDto) {
 
         Fakultet existingFakultet = fakultetRepository.findById(fakultetDto.getMaticniBroj()).orElseThrow(
-                () -> new ResourceNotFoundException("Fakultet ", "Maticni broj= ",fakultetDto.getMaticniBroj()));
+                () -> new ResursNijePronadjenException("Fakultet ", "Maticni broj= ",fakultetDto.getMaticniBroj()));
 
         existingFakultet.setNaziv(fakultetDto.getNaziv());
         Mesto mesto = mestoRepository.getById(fakultetDto.getMestoId());
@@ -81,7 +81,7 @@ public class FakultetServiceImpl implements FakultetService {
             });
             fakultetRepository.deleteById(maticniBroj);
         }else {
-            throw new ResourceNotFoundException("Fakultet ne postoji sa ", "ID= ", maticniBroj);
+            throw new ResursNijePronadjenException("Fakultet ne postoji sa ", "ID= ", maticniBroj);
         }
 //        fakultetRepository.deleteById(maticniBroj);
     }
