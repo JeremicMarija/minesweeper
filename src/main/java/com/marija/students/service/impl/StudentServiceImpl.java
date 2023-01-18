@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,7 +91,7 @@ public class StudentServiceImpl implements StudentService {
     public Student updateStudent(StudentDto studentDto) {
 
         Student existingStudent = studentRepository.findStudentById(studentDto.getBrojIndeksa()).orElseThrow(
-                () -> new ResursNijePronadjenException("Student ", "Broj indeksa= ", studentDto.getBrojIndeksa()));
+                () -> new ResursNijePronadjenException("Student nije pronadjen ", "Broj indeksa= ", studentDto.getBrojIndeksa()));
 
         existingStudent.setIme(studentDto.getIme());
         existingStudent.setPrezime(studentDto.getPrezime());
@@ -99,20 +100,23 @@ public class StudentServiceImpl implements StudentService {
         existingStudent.setStarost(calcStarost(studentDto.getDatumRodjenja()));
 
         List<Fakultet> fakultetList = existingStudent.getFakulteti();
+//        List<Fakultet> fakultetList = new ArrayList<>();
+
         for (String fakultetId: studentDto.getFakultetIds()){
             Fakultet tempFakultet = fakultetRepository.findFakultetById(fakultetId);
+//            Fakultet tempFakultet = fakultetRepository.getOne(fakultetId);
 
             if (fakultetList.contains(tempFakultet)){
                 throw new FakultetVecDodeljenException(fakultetId,studentDto.getBrojIndeksa());
             }else {
-                fakultetList.add(tempFakultet);
                 existingStudent.registrujStudentaZaFakultet(tempFakultet);
             }
         }
+//        existingStudent.setFakulteti(fakultetList);
         existingStudent.setFakulteti(fakultetList);
+
         studentRepository.save(existingStudent);
 
-        System.out.println(existingStudent);
         return existingStudent;
 
     }

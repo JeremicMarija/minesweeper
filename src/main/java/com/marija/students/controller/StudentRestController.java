@@ -42,7 +42,8 @@ public class StudentRestController {
 
     @GetMapping("/get/{studentId}")
     public @ResponseBody ResponseEntity<Student>getStudent(@PathVariable String studentId){
-
+        studentId = studentId.replace('-','/');
+        System.out.println(studentId);
         Optional<Student> student = studentService.findByID(studentId);
 
         if (student.isPresent()){
@@ -51,6 +52,7 @@ public class StudentRestController {
         else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
     }
 //
 //    @PostMapping("/save")
@@ -78,6 +80,8 @@ public class StudentRestController {
 
     @DeleteMapping("/delete/{brojIndeksa}")
     public @ResponseBody ResponseEntity<String>delete(@PathVariable String brojIndeksa){
+        //replace(-, /)
+        brojIndeksa = brojIndeksa.replace('-','/');
         studentService.delete(brojIndeksa);
         return ResponseEntity.status(HttpStatus.OK).body("Deleted");
     }
