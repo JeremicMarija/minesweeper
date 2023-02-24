@@ -121,22 +121,9 @@ public class Student {
     }
 
     public void ukloniStudentaZaFakultet(Fakultet fakultet){
-
+        this.getFakulteti().remove(fakultet);
+        fakultet.getStudenti().remove(this);
     }
-
-    //    public void addFakultet(Fakultet fakultet){
-//        this.assignedFakulteti.add(fakultet);
-//        fakultet.getStudenti().add(this);
-//    }
-//
-//    public void removeFakultet(String fakultetId){
-//        Fakultet fakultet = this.assignedFakulteti.stream().filter(f -> f.getMaticniBroj() == fakultetId).findFirst().orElse(null);
-//        if (fakultet != null){
-//            this.assignedFakulteti.remove(fakultet);
-//            fakultet.getStudenti().remove(this);
-//        }
-//    }
-
 
 
 }

@@ -76,9 +76,11 @@ public class StudentServiceImpl implements StudentService {
 
         Optional<Student> student = studentRepository.findStudentById(studentId);
         if (student.isPresent()){
-            student.get().getFakulteti().forEach(fakultet -> fakultet.getStudenti().remove(student));
-//            studentRepository.flush();
-            studentRepository.deleteById(studentId);
+//            student.get().getFakulteti().forEach(fakultet -> student.get().ukloniStudentaZaFakultet(fakultet));
+            for(int i = 0; i< student.get().getFakulteti().size(); i++){
+                student.get().ukloniStudentaZaFakultet(student.get().getFakulteti().get(i));
+            }
+            studentRepository.delete(student.get());
         }
     }
 
@@ -113,9 +115,8 @@ public class StudentServiceImpl implements StudentService {
             }
         }
 //        existingStudent.setFakulteti(fakultetList);
-        existingStudent.setFakulteti(fakultetList);
 
-        studentRepository.save(existingStudent);
+//        studentRepository.save(existingStudent);
 
         return existingStudent;
 
