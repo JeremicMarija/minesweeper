@@ -16,7 +16,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,16 +40,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student createStudent(StudentDto studentDto) {
-       Optional<Student> studentOptional = studentRepository.findStudentById(studentDto.getBrojIndeksa());
+//       Optional<Student> studentOptional = studentRepository.findStudentById(studentDto.getBrojIndeksa());
+        Student studentFined = studentRepository.findStudentById(studentDto.getBrojIndeksa());
 
-       if (studentOptional.isPresent()){
-           throw new IllegalStateException("Student postoji");
+//       if (studentOptional.isPresent()){
+//           throw new IllegalStateException("Student postoji");
+        if(studentFined != null){
+            throw new IllegalStateException("Student postoji");
        }else{
-//           Student student = modelMapper.map(studentDto,Student.class);
-//           student.setStarost(calcStarost(studentDto.getDatumRodjenja()));
-//           Fakultet fakultet = fakultetRepository.findFakultetById(studentDto.getFakultetId());
-//           student.registrujStudentaZaFakultet(fakultet);
-//           return studentRepository.save(student);
 
            Student student = modelMapper.map(studentDto,Student.class);
            student.setStarost(calcStarost(studentDto.getDatumRodjenja()));
@@ -59,7 +56,7 @@ public class StudentServiceImpl implements StudentService {
            for (String fakultetId: studentDto.getFakultetIds()){
                Fakultet tempFakultet = fakultetRepository.findFakultetById(fakultetId);
                fakultetList.add(tempFakultet);
-               student.registrujStudentaZaFakultet(tempFakultet);
+               student.dodajFakultetZaStudenta(tempFakultet);
            }
            student.setFakulteti(fakultetList);
            return studentRepository.save(student);
@@ -72,16 +69,26 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void delete(String studentId) {
+    public void delete(String studentId){
 
-        Optional<Student> student = studentRepository.findStudentById(studentId);
-        if (student.isPresent()){
-//            student.get().getFakulteti().forEach(fakultet -> student.get().ukloniStudentaZaFakultet(fakultet));
-            for(int i = 0; i< student.get().getFakulteti().size(); i++){
-                student.get().ukloniStudentaZaFakultet(student.get().getFakulteti().get(i));
+        Student student = studentRepository.findStudentById(studentId);
+
+        if (student != null){
+            int size = student.getFakulteti().size();
+            for (int i = 0; i < size; i++){
+//                Thread.sleep(1000);
+                System.out.println(student.getFakulteti().size() + " for loop");
+                student.ukloniFakultetZaStudenta(student.getFakulteti().get(0));
             }
-            studentRepository.delete(student.get());
+//            for (Fakultet fakultet : student.getFakulteti()){
+//
+//                System.out.println(fakultet + " for loop");
+//                student.ukloniFakulteteZaStudenta(fakultet);
+//            }
+            System.out.println("posle for");
+            studentRepository.delete(student);
         }
+
     }
 
     @Override
@@ -92,8 +99,12 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student updateStudent(StudentDto studentDto) {
 
-        Student existingStudent = studentRepository.findStudentById(studentDto.getBrojIndeksa()).orElseThrow(
-                () -> new ResursNijePronadjenException("Student nije pronadjen ", "Broj indeksa= ", studentDto.getBrojIndeksa()));
+//        Student existingStudent = studentRepository.findStudentById(studentDto.getBrojIndeksa()).orElseThrow(
+//                () -> new ResursNijePronadjenException("Student nije pronadjen ", "Broj indeksa= ", studentDto.getBrojIndeksa()));
+        Student existingStudent = studentRepository.findStudentById(studentDto.getBrojIndeksa());
+        if (existingStudent == null){
+            throw new ResursNijePronadjenException("Student nije pronadjen ", "Broj indeksa= ", studentDto.getBrojIndeksa());
+        }
 
         existingStudent.setIme(studentDto.getIme());
         existingStudent.setPrezime(studentDto.getPrezime());
@@ -111,7 +122,7 @@ public class StudentServiceImpl implements StudentService {
             if (fakultetList.contains(tempFakultet)){
                 throw new FakultetVecDodeljenException(fakultetId,studentDto.getBrojIndeksa());
             }else {
-                existingStudent.registrujStudentaZaFakultet(tempFakultet);
+                existingStudent.dodajFakultetZaStudenta(tempFakultet);
             }
         }
 //        existingStudent.setFakulteti(fakultetList);

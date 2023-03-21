@@ -115,13 +115,13 @@ public class Student {
         this.fakulteti = fakulteti;
     }
 
-    public void registrujStudentaZaFakultet(Fakultet fakultet){
+    public void dodajFakultetZaStudenta(Fakultet fakultet){
         fakulteti.add(fakultet);
         fakultet.getStudenti().add(this);
     }
 
-    public void ukloniStudentaZaFakultet(Fakultet fakultet){
-        this.getFakulteti().remove(fakultet);
+    public void ukloniFakultetZaStudenta(Fakultet fakultet){
+        fakulteti.remove(fakultet);
         fakultet.getStudenti().remove(this);
     }
 

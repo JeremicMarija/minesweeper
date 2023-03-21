@@ -13,7 +13,8 @@ import java.util.Optional;
 public interface StudentRepository extends JpaRepository<Student,String> {
 
     @Query("SELECT s FROM Student s WHERE s.brojIndeksa = ?1")
-    Optional<Student> findStudentById(String brojIndeksa);
+//    Optional<Student> findStudentById(String brojIndeksa);
+    Student findStudentById(String brojIndeksa);
 
 
 

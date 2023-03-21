@@ -75,7 +75,8 @@ public class StudentRestController {
 
     @PutMapping("/update")
     public ResponseEntity<Student> updateStudent(@Valid @RequestBody StudentDto studentDto){
-        return  new ResponseEntity<Student>(studentService.updateStudent(studentDto), HttpStatus.OK);
+        Student student = studentService.updateStudent(studentDto);
+        return  new ResponseEntity<Student>(student, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{brojIndeksa}")
