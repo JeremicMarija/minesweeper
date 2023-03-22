@@ -97,6 +97,16 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public Student getStudentById(String studentId) {
+        Student student = studentRepository.findStudentById(studentId);
+        if (student != null){
+            return student;
+        }
+        else {
+            throw new ResursNijePronadjenException("Student ne postoji sa ", "ID= ", studentId);        }
+    }
+
+    @Override
     public Student updateStudent(StudentDto studentDto) {
 
 //        Student existingStudent = studentRepository.findStudentById(studentDto.getBrojIndeksa()).orElseThrow(

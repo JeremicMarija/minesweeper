@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,28 +42,24 @@ public class StudentRestController {
     }
 
     @GetMapping("/get/{studentId}")
-    public @ResponseBody ResponseEntity<Student>getStudent(@PathVariable String studentId){
+    public @ResponseBody ResponseEntity<StudentDto>getStudent(@PathVariable String studentId){
         studentId = studentId.replace('-','/');
-        System.out.println(studentId);
-        Optional<Student> student = studentService.findByID(studentId);
+//        System.out.println(studentId);
 
-        if (student.isPresent()){
-            return ResponseEntity.status(HttpStatus.OK).body(student.get());
+        Student student = studentService.getStudentById(studentId);
+        StudentDto studentResponse = modelMapper.map(student, StudentDto.class);
+        List<Fakultet> fakultetList = student.getFakulteti();
+        List<String>fakultetIdsList = new ArrayList<>();
+        for (int i = 0; i < fakultetList.size(); i++){
+            fakultetIdsList.add(fakultetList.get(i).getMaticniBroj());
+//            System.out.println(fakultetList.get(i).getMaticniBroj());
+//            System.out.println(fakultetIdsList);
         }
-        else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        studentResponse.setFakultetIds(fakultetIdsList);
+        return ResponseEntity.status(HttpStatus.OK).body(studentResponse);
 
     }
-//
-//    @PostMapping("/save")
-//    public ResponseEntity<StudentDto>createStudent(@Valid @RequestBody StudentDto studentDto){
-//
-//        Student student = studentService.createStudent(studentDto);
-//        StudentDto studentResponse = modelMapper.map(student, StudentDto.class);
-//        studentResponse.setFakultetId(student.getFakulteti().get(0).getMaticniBroj());
-//        return new ResponseEntity<StudentDto>(studentResponse, HttpStatus.CREATED);
-//    }
+
     @PostMapping("/save")
     public ResponseEntity<Student>createStudent(@Valid @RequestBody StudentDto studentDto){
 

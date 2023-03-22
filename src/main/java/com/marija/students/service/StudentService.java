@@ -17,9 +17,9 @@ public interface StudentService {
     public List<Student> findAll();
 
     Optional<Student>findByID(String studentID);
+    Student getStudentById(String studentId);
 
     Student updateStudent(StudentDto studentDto);
-//    Student updateStudent(Student student);
 
     int calcStarost(LocalDate datumRodjenja);
 
