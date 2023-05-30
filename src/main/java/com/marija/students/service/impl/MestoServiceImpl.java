@@ -34,7 +34,7 @@ public class MestoServiceImpl implements MestoService {
     }
 
     @Override
-    public List<Mesto> findAll() {
+    public List<Mesto> getAllMesta() {
         return mestoRepository.findAll();
     }
 
@@ -44,7 +44,7 @@ public class MestoServiceImpl implements MestoService {
     }
 
     @Override
-    public Optional<Mesto> findByID(Long ptt) {
+    public Optional<Mesto> getMesto(Long ptt) {
         return mestoRepository.findById(ptt);
     }
 

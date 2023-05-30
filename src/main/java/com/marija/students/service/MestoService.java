@@ -10,11 +10,11 @@ public interface MestoService {
 
     public Mesto createMesto(Mesto mesto);
 
-    public List<Mesto> findAll();
+    public List<Mesto> getAllMesta();
 
     public void delete(Long ptt);
 
-    Optional<Mesto>findByID(Long ptt);
+    Optional<Mesto> getMesto(Long ptt);
 
     Mesto updateMesto(Mesto mesto, Long ptt);
 }

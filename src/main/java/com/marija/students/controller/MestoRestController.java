@@ -28,7 +28,7 @@ public class MestoRestController {
     @GetMapping("/all")
     public @ResponseBody ResponseEntity<List<Mesto>> findAll(){
 
-        List<Mesto> mesto = mestoService.findAll();
+        List<Mesto> mesto = mestoService.getAllMesta();
 
         return ResponseEntity.status(HttpStatus.OK).body(mesto);
     }
@@ -36,7 +36,7 @@ public class MestoRestController {
     @GetMapping("/get/{ptt}")
     public @ResponseBody ResponseEntity<Mesto> getMesto(@PathVariable Long ptt){
 
-        Optional<Mesto> mesto = mestoService.findByID(ptt);
+        Optional<Mesto> mesto = mestoService.getMesto(ptt);
 
         if(mesto.isPresent()){
             return ResponseEntity.status(HttpStatus.OK).body(mesto.get());

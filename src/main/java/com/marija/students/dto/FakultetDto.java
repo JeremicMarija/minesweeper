@@ -26,6 +26,14 @@ public class FakultetDto {
     @Digits(integer = 5, fraction = 0, message = "Ptt mora imati 5 cifara")
     private Long mestoId;
 
+    public FakultetDto() {
+    }
+
+    public FakultetDto(String maticniBroj, String naziv, Long mestoId) {
+        this.maticniBroj = maticniBroj;
+        this.naziv = naziv;
+        this.mestoId = mestoId;
+    }
 
     public String getMaticniBroj() {
         return maticniBroj;

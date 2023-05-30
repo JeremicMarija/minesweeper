@@ -33,9 +33,10 @@ public class StudentServiceImpl implements StudentService {
     private FakultetRepository fakultetRepository;
 
 
-    public StudentServiceImpl(StudentRepository studentRepository, FakultetRepository fakultetRepository) {
+    public StudentServiceImpl(ModelMapper modelMapper,StudentRepository studentRepository, FakultetRepository fakultetRepository) {
         this.studentRepository = studentRepository;
         this.fakultetRepository = fakultetRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -77,7 +78,7 @@ public class StudentServiceImpl implements StudentService {
             int size = student.getFakulteti().size();
             for (int i = 0; i < size; i++){
 //                Thread.sleep(1000);
-                System.out.println(student.getFakulteti().size() + " for loop");
+               // System.out.println(student.getFakulteti().size() + " for loop"); nije bilo zakomntarisano
                 student.ukloniFakultetZaStudenta(student.getFakulteti().get(0));
             }
 //            for (Fakultet fakultet : student.getFakulteti()){
@@ -85,7 +86,7 @@ public class StudentServiceImpl implements StudentService {
 //                System.out.println(fakultet + " for loop");
 //                student.ukloniFakulteteZaStudenta(fakultet);
 //            }
-            System.out.println("posle for");
+            //System.out.println("posle for"); nije bilo zakomntarisano
             studentRepository.delete(student);
         }
 
@@ -125,19 +126,19 @@ public class StudentServiceImpl implements StudentService {
         List<Fakultet> fakultetList = existingStudent.getFakulteti();
 //        List<Fakultet> fakultetList = new ArrayList<>();
 
-        for (String fakultetId: studentDto.getFakultetIds()){
+        for (String fakultetId: studentDto.getFakultetIds()) {
             Fakultet tempFakultet = fakultetRepository.findFakultetById(fakultetId);
 //            Fakultet tempFakultet = fakultetRepository.getOne(fakultetId);
 
-            if (fakultetList.contains(tempFakultet)){
+            if (fakultetList.contains(tempFakultet)) {
                 throw new FakultetVecDodeljenException(fakultetId,studentDto.getBrojIndeksa());
-            }else {
+            } else {
                 existingStudent.dodajFakultetZaStudenta(tempFakultet);
             }
         }
 //        existingStudent.setFakulteti(fakultetList);
 
-//        studentRepository.save(existingStudent);
+        studentRepository.save(existingStudent); //bilo zakomentarisano
 
         return existingStudent;
 

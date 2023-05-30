@@ -35,6 +35,9 @@ public class StudentDto {
 //    private String fakultetId;
     private List<String> fakultetIds = new ArrayList<>();
 
+//    public StudentDto(String s, String marija, String jeremic, LocalDate parse, String s1) {
+//    }
+
     public String getBrojIndeksa() {
         return brojIndeksa;
     }
